@@ -62,15 +62,18 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 10,
         paddingVertical: 20,
+        marginBottom: 10,
         flexDirection: 'row',
         borderColor: colors.lightGrey,
         backgroundColor: 'white',
         borderWidth: 0.5,
-        borderTopWidth: 0
+        borderTopWidth: 0,
+        borderRadius: 10,
     },
     textContainer: {
         flex: 1,
         marginRight: 8
+
     },
     title: {
         fontFamily: 'medium',

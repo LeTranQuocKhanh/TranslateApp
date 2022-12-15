@@ -16,6 +16,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import DetectScreen from './screens/DetectScreen';
+import HistoryScreen from './screens/HistoryScreen';
+import CameraScreen from './screens/CameraScreen';
+
 
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // AsyncStorage.clear();
@@ -29,13 +32,32 @@ const TabNavigator = () => {
     <Tab.Navigator
       screenOptions={{ headerShown: false }}>
       <Tab.Screen
+        name="History"
+        component={HistoryScreen}
+        options={{
+          tabBarLabel: "History",
+          tabBarIcon: (props) => <Ionicons name="search" size={props.size} color={props.color} />
+        }}
+      />
+      <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
           tabBarLabel: "Home",
+          tabBarIcon: (props) => <Ionicons name="camera-outline" size={props.size} color={props.color} />
+        }}
+      />
+
+<Tab.Screen
+        name="Camere"
+        component={CameraScreen}
+        options={{
+          tabBarLabel: "Camera",
           tabBarIcon: (props) => <Entypo name="home" size={props.size} color={props.color} />
         }}
       />
+
+
 
       <Tab.Screen
         name="Saved"

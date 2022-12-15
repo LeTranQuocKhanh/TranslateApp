@@ -11,6 +11,10 @@ import TranslationResult from '../components/TranslationResult';
 import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setSavedItems } from '../store/savedItemsSlice';
+import * as Speech from 'expo-speech';
+
+
+
 
 const loadData = () => {
     return async dispatch => {
@@ -40,7 +44,7 @@ export default function HomeScreen(props) {
 
     const [enteredText, setEnteredText] = useState("");
     const [resultText, setResultText] = useState("");
-    const [languageTo, setLanguageTo] = useState("fr");
+    const [languageTo, setLanguageTo] = useState("vi");
     const [languageFrom, setLanguageFrom] = useState("en");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -84,7 +88,6 @@ export default function HomeScreen(props) {
 
             // const textResult = result.translated_text[result.to];
             const textResult = result.translated_text
-            console.log(result)
             setResultText(textResult);
 
             const id = uuid.v4();
@@ -104,6 +107,18 @@ export default function HomeScreen(props) {
     const copyToClipboard = useCallback(async () => {
         await Clipboard.setStringAsync(resultText);
     }, [resultText]);
+
+
+    const speakTranslated = useCallback(async () => {
+        await Speech.speak(resultText);
+    }, [resultText]);
+
+    const speak = useCallback(async () => {
+        const options={
+            "language":'en-IE'
+        };
+        Speech.speak(enteredText, options);
+    }, [enteredText]);
 
   return (
       <View style={styles.container}>
@@ -134,6 +149,15 @@ export default function HomeScreen(props) {
             />
 
             <TouchableOpacity
+                onPress={speak}
+                style={styles.iconContainer}>
+                <MaterialIcons 
+                    name="volume-up"
+                    size={24} 
+                    color={enteredText !== "" ? colors.textColor : colors.textColorDisabled} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
                 onPress={isLoading ? undefined : onSubmit}
                 disabled={enteredText === ""}
                 style={styles.iconContainer}>
@@ -152,6 +176,16 @@ export default function HomeScreen(props) {
 
         <View style={styles.resultContainer}>
             <Text style={styles.resultText}>{resultText}</Text>
+
+            <TouchableOpacity
+                onPress={speakTranslated}
+                disabled={resultText === ""}
+                style={styles.iconContainer}>
+                <MaterialIcons 
+                    name="volume-up"
+                    size={24} 
+                    color={resultText !== "" ? colors.textColor : colors.textColorDisabled} />
+            </TouchableOpacity>
 
             <TouchableOpacity
                 onPress={copyToClipboard}
