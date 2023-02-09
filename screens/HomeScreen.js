@@ -93,6 +93,7 @@ export default function HomeScreen(props) {
             const id = uuid.v4();
             result.id = id;
             result.dateTime = new Date().toISOString();
+            result.original_text = enteredText;
 
             dispatch(addHistoryItem({ item: result }));
         } catch (error) {

@@ -1,11 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Button, Image } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, Button, Image,TouchableOpacity } from 'react-native';
+import { useEffect, useRef, useState ,useCallback} from 'react';
 import { Camera } from 'expo-camera';
 import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
 import { useIsFocused } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker'
+import { Ionicons,  AntDesign , MaterialIcons } from '@expo/vector-icons';
+import colors from '../utils/colors';
+import * as Clipboard from 'expo-clipboard';
+
+// import TranslationResult from '../components/TranslationResult';
+
 
 // var options =  { 
 //   apikey: '5c12daff7588957',
@@ -23,7 +29,11 @@ export default function CameraScreen() {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
 
   const [photo, setPhoto] = useState();
-  const [text, setText] = useState("");
+  const [text, setText] = useState();
+
+  const copyToClipboard = useCallback(async () => {
+    await Clipboard.setStringAsync(text);
+}, [text]);
 
   useEffect(() => {
     (async () => {
@@ -35,11 +45,10 @@ export default function CameraScreen() {
       setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
       setHasMediaLibraryPermission(galleryStatus.status == "granted");
 
-    })();
+    })
+    ();
 
-    // if(photo){
 
-    // }
   }, []);
 
   if (hasCameraPermission === undefined) {
@@ -60,7 +69,7 @@ export default function CameraScreen() {
       base64: true,
 
     })
-    console.log(result)
+    // console.log(result)
 
     if(!result.cancelled){
       setPhoto(result)
@@ -76,7 +85,7 @@ export default function CameraScreen() {
 
     let newPhoto = await cameraRef.current.takePictureAsync(options);
     setPhoto(newPhoto);
-    console.log(newPhoto.uri)
+    // console.log(newPhoto.uri)
   };
 
   if (photo) {
@@ -92,10 +101,11 @@ export default function CameraScreen() {
       });
     };
 
+    
 
     const convertToText = async () => {
       var myHeaders = new Headers();
-      myHeaders.append("apikey", "helloworld");
+      myHeaders.append("apikey", "5c12daff7588957");
       
       var formdata = new FormData();
       formdata.append("language", "eng");
@@ -113,34 +123,86 @@ export default function CameraScreen() {
       };
       
       fetch("https://api.ocr.space/parse/image", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
+        .then(response => response.json())
+        .then(result => {
+          setPhoto(undefined)
+          setText(result.ParsedResults[0].ParsedText)
+        })
         .catch(error => console.log('error', error));
     }
-
-
 
 
     return (
       <SafeAreaView style={styles.container}>
         {/* <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," + photo.base64 }} /> */}
         <Image style={styles.preview} source={{ uri: photo.uri }} />
-        <Button title="Share" onPress={sharePic} />
-        {hasMediaLibraryPermission ? <Button title="Save" onPress={savePhoto} /> : undefined}
-        <Button title="Discard" onPress={() => setPhoto(undefined)} />
-        <Button title="Translate" onPress={convertToText} />
+        <View style={styles.editbuttonContainer}>
+          {hasMediaLibraryPermission ? (
+            <View style={styles.buttonText}>
+              <AntDesign name="save" size={25} color={colors.primary}/>
+              <Button title="Save" onPress={savePhoto}  color={colors.primary}/>
+            </View>
+          ) : undefined}
+          
+          <View style={styles.buttonText}>
+              <AntDesign name="closecircleo" size={25} color={colors.primary}/>
+              <Text>{" "}</Text>
+              <Button title="Discard" color={colors.primary} onPress={() => setPhoto(undefined)} />
+            </View>
+
+            <View style={styles.buttonText}>
+            <Ionicons name="scan" size={25} color={colors.primary} />
+            <Text>{" "}</Text>
+            <Button title="Detect" onPress={convertToText} color={colors.primary} />
+            </View>
+
+        </View>
       </SafeAreaView>
     );
   }
 
+
+
   return (
-    isFocused && <Camera style={styles.container} ref={cameraRef}>
+    text ? <View style={styles.container}>
+
+    <View style={styles.textContainer}>
+        <Text
+            numberOfLines={10}
+            style={styles.title}>{text}</Text>
+    </View>
+    <View flexDirection='row'>
+    <TouchableOpacity
+                onPress={() => setText(undefined)}
+                style={styles.iconContainer}>
+                <AntDesign name="back" size={24}
+                    color={text !== "" ? colors.textColor : colors.textColorDisabled} />
+            </TouchableOpacity>
+    <TouchableOpacity
+                onPress={copyToClipboard}
+                disabled={text === ""}
+                style={styles.iconContainer}>
+                <MaterialIcons 
+                    name="content-copy"
+                    size={24} 
+                    color={text !== "" ? colors.textColor : colors.textColorDisabled} />
+            </TouchableOpacity>
+
+    </View>
+</View> :
+    isFocused &&       <Camera style={styles.container} ref={cameraRef}>
     <View style={styles.buttonContainer}>
-      <Button title="Take Pic" onPress={takePic} />
-      <Button title="Upload image" onPress={pickImage} />
+      <View style={styles.buttonText}>
+        <Ionicons name="scan-circle" size={30} color={colors.primary} />
+        <Button title="Scan" onPress={takePic}  color={colors.primary} />
+      </View>
+      <View style={styles.buttonText}>
+        <AntDesign name="picture" size={30} color={colors.primary} />
+        <Button title="Upload" onPress={pickImage}  color={colors.primary}/>
+      </View>
     </View>
     <StatusBar style="auto" />
-  </Camera> 
+  </Camera>
     
   );
 }
@@ -158,5 +220,50 @@ const styles = StyleSheet.create({
   preview: {
     alignSelf: 'stretch',
     flex: 1
+  },
+  buttonContainer: {
+    padding: 3,
+    alignItems: "center",
+    justifyContent: "space-around",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    paddingHorizontal: 60,
+  },
+
+  editbuttonContainer: {
+    padding: 3,
+    alignItems: "center",
+    justifyContent: "space-around",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    paddingHorizontal: 20,
+  },
+  editbuttonContainer: {
+    padding: 3,
+    alignItems: "center",
+    justifyContent: "space-around",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    paddingHorizontal: 20,
+  },
+
+  buttonText: {
+    color: "red",
+    alignItems: "center",
+    // fontWeight: 'bold',
+    flexDirection: "row",
+  },
+  textContainer: {
+    backgroundColor: colors.primary,
+    margin: '5px'
   }
 });

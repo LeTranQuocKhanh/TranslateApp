@@ -15,7 +15,7 @@ import colors from './utils/colors';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-redux';
 import store from './store/store';
-import DetectScreen from './screens/DetectScreen';
+// import DetectScreen from './screens/DetectScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import CameraScreen from './screens/CameraScreen';
 
@@ -39,21 +39,22 @@ const TabNavigator = () => {
           tabBarIcon: (props) => <Ionicons name="search" size={props.size} color={props.color} />
         }}
       />
-      <Tab.Screen
+
+<Tab.Screen
+        name="Camera"
+        component={CameraScreen}
+        options={{
+          tabBarLabel: "Camera",
+          tabBarIcon: (props) => <Ionicons name="camera-outline" size={props.size} color={props.color} />
+        }}
+      />
+            <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
           tabBarLabel: "Home",
-          tabBarIcon: (props) => <Ionicons name="camera-outline" size={props.size} color={props.color} />
-        }}
-      />
-
-<Tab.Screen
-        name="Camere"
-        component={CameraScreen}
-        options={{
-          tabBarLabel: "Camera",
           tabBarIcon: (props) => <Entypo name="home" size={props.size} color={props.color} />
+          
         }}
       />
 
@@ -77,14 +78,14 @@ const TabNavigator = () => {
         }}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Camera"
         component={DetectScreen}
         options={{
           tabBarLabel: "Camera",
           tabBarIcon: (props) => <Ionicons name="md-camera" size={props.size} color={props.color} />
         }}
-      />
+      /> */}
     </Tab.Navigator>
   )
 }

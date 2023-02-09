@@ -118,7 +118,7 @@ export default function HistoryScreen(props) {
     <View style={styles.historyContainer}>
     <View style={styles.searchBar}>
         <TextInput style={styles.searchInput}
-            placeholder='Enter your search'
+            placeholder='Bạn muốn tìm gì?'
             onChangeText={enteredText => search(enteredText)}
             >
             

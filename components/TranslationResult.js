@@ -18,8 +18,6 @@ export default TranslationResult = props => {
 
     const isSaved = savedItems.some(i => i.id === itemId);
     const starIcon = isSaved ? "star" : "star-outlined";
-    console.log('Item')
-    console.log(item)
 
     const starItem = useCallback(async () => {
         let newSavedItems;
@@ -37,7 +35,7 @@ export default TranslationResult = props => {
         dispatch(setSavedItems({ items: newSavedItems }));
     }, [dispatch, savedItems]);
 
-    return <View style={styles.container}>
+    return item ? <View style={styles.container}>
 
         <View style={styles.textContainer}>
             <Text
@@ -55,7 +53,7 @@ export default TranslationResult = props => {
             style={styles.iconContainer}>
             <Entypo name={starIcon} size={24} color={colors.subTextColor} />
         </TouchableOpacity>
-    </View>
+    </View> : <View><Text>Không có dữ liệu</Text></View>
 }
 
 const styles = StyleSheet.create({
