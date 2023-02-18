@@ -1,5 +1,5 @@
 import { ActivityIndicator, Button, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialIcons ,Octicons } from '@expo/vector-icons';
 import colors from '../utils/colors';
 import { useCallback, useEffect, useState } from 'react';
 import supportedLanguages from '../utils/supportedLanguages';
@@ -12,7 +12,6 @@ import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setSavedItems } from '../store/savedItemsSlice';
 import * as Speech from 'expo-speech';
-
 
 
 
@@ -75,6 +74,7 @@ export default function HomeScreen(props) {
         saveHistory();
     }, [history]);
 
+
     const onSubmit = useCallback(async () => {
 
         try {
@@ -106,6 +106,21 @@ export default function HomeScreen(props) {
 
     }, [enteredText, languageTo, languageFrom, dispatch]);
 
+
+    const switchLanguage = async () =>{
+        let temp = languageFrom;
+        setLanguageFrom(languageTo)
+        setLanguageTo(temp)
+
+        console.log('From', languageFrom, 'To', languageTo)
+    }
+
+    const clear =async () => {
+        await setEnteredText("")
+        console.log('This is enterText', enteredText)
+    }
+
+
     const copyToClipboard = useCallback(async () => {
         await Clipboard.setStringAsync(resultText);
     }, [resultText]);
@@ -136,8 +151,9 @@ export default function HomeScreen(props) {
 
 
             <TouchableOpacity
-                style={styles.arrowContainer}>
-                <AntDesign name="arrowright" size={24} color={colors.lightGrey} />
+                style={styles.arrowContainer}
+                onPress={switchLanguage}>
+                <Octicons name="arrow-switch" size={24} color={colors.lightGrey} />
             </TouchableOpacity>
 
 
@@ -151,10 +167,20 @@ export default function HomeScreen(props) {
         <View style={styles.inputContainer}>
             <TextInput
                 multiline
+                numberOfLines={10}
                 placeholder='Enter text'
                 style={styles.textInput}
                 onChangeText={(text) => setEnteredText(text)}
+                value={enteredText}
             />
+
+
+            {enteredText ? 
+            <TouchableOpacity
+                onPress={clear}
+                style={styles.iconContainer}>
+                <AntDesign name="close" size={24} color={colors.textColor} />
+            </TouchableOpacity>: null}
 
             <TouchableOpacity
                 onPress={speak}

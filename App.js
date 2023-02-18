@@ -40,7 +40,7 @@ const TabNavigator = () => {
         }}
       />
 
-<Tab.Screen
+      <Tab.Screen
         name="Camera"
         component={CameraScreen}
         options={{
@@ -155,7 +155,7 @@ export default function App() {
                 name="main"
                 component={TabNavigator}
                 options={{
-                  headerTitle: "Translate"
+                  headerTitle: "Translate app"
                 }}
               />
             </Stack.Group>

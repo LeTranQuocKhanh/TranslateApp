@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Button, Image,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Button, Image,TouchableOpacity, TextInput } from 'react-native';
 import { useEffect, useRef, useState ,useCallback} from 'react';
 import { Camera } from 'expo-camera';
 import { shareAsync } from 'expo-sharing';
@@ -12,7 +12,7 @@ import * as Clipboard from 'expo-clipboard';
 
 
 
-export default function CameraScreen() {
+export default function CameraScreen(props) {
   let cameraRef = useRef();
   const isFocused = useIsFocused();
   const [hasCameraPermission, setHasCameraPermission] = useState();
@@ -158,27 +158,27 @@ export default function CameraScreen() {
 
   return (
     text ? <View style={styles.container}>
-
     <View style={styles.textContainer}>
-        <Text
-            numberOfLines={10}
-            style={styles.title}>{text}</Text>
+          <Text
+          multiline
+          numberOfLines={10}
+          styles={{color: 'white'}}>{text}</Text>
     </View>
     <View flexDirection='row'>
     <TouchableOpacity
                 onPress={() => setText(undefined)}
-                style={styles.iconContainer}>
+                style={styles.buttonOption}>
                 <AntDesign name="back" size={24}
-                    color={text !== "" ? colors.textColor : colors.textColorDisabled} />
-            </TouchableOpacity>
+                    color={text !== "" ? colors.primary : colors.textColorDisabled} />
+      </TouchableOpacity>
     <TouchableOpacity
                 onPress={copyToClipboard}
                 disabled={text === ""}
-                style={styles.iconContainer}>
+                style={styles.buttonText}>
                 <MaterialIcons 
                     name="content-copy"
                     size={24} 
-                    color={text !== "" ? colors.textColor : colors.textColorDisabled} />
+                    color={text !== "" ? colors.primary : colors.textColorDisabled} />
             </TouchableOpacity>
 
     </View>
@@ -211,8 +211,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end'
   },
   preview: {
-    alignSelf: 'stretch',
-    flex: 1
+    // alignSelf: 'center',
+    flex: 1,
+    height: 1000,
+    width: 1000
   },
   buttonContainer: {
     padding: 3,
@@ -250,12 +252,26 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: "red",
     alignItems: "center",
     // fontWeight: 'bold',
     flexDirection: "row",
+    // backgroundColor: colors.lightGrey
+  },
+  buttonOption: {
+    alignItems: "center",
+    // fontWeight: 'bold',
+    flexDirection: "row",
+    // backgroundColor: colors.lightGrey
+    marginRight: 10
   },
   textContainer: {
     backgroundColor: colors.primary,
+    color: 'white',
+    padding: 10,
+    borderRadius: 10,
+    margin: 10
+  },
+  title:{
+    textColor: 'white'
   }
 });

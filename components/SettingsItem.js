@@ -27,17 +27,20 @@ export default SettingsItem = props => {
 
 const styles = StyleSheet.create({
     container: {
+        paddingHorizontal: 10,
+        paddingVertical: 20,
+        marginBottom: 10,
         flexDirection: 'row',
-        backgroundColor: 'white',
         borderColor: colors.lightGrey,
+        backgroundColor: 'white',
         borderWidth: 0.5,
         borderTopWidth: 0,
-        paddingVertical: 10,
-        paddingHorizontal: 20
+        borderRadius: 10,
     },
     textContainer: {
         flex: 1,
         marginRight: 8
+
     },
     title: {
         fontFamily: 'medium',
