@@ -26,7 +26,7 @@ export const Translate = async (text, languageFrom, languageTo) => {
     // return response.data;
     translate.engine = "google"; // Or "yandex", "libre", "deepl"
     
-    const textTranslated = await translate(text, languageTo);
+    const textTranslated = await translate(text, {from: languageFrom, to: languageTo } );
     const result = {
         "from": languageFrom,
         "original_text": text,

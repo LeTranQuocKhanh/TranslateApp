@@ -79,6 +79,7 @@ export default function HomeScreen(props) {
 
         try {
             setIsLoading(true);
+            console.log(languageFrom, languageTo )
             const result = await Translate(enteredText, languageFrom, languageTo);
 
             if (!result) {
@@ -111,12 +112,15 @@ export default function HomeScreen(props) {
 
 
     const speakTranslated = useCallback(async () => {
-        await Speech.speak(resultText);
+        const options={
+            "language": languageTo
+        };
+        await Speech.speak(resultText,options);
     }, [resultText]);
 
     const speak = useCallback(async () => {
         const options={
-            "language":'en-IE'
+            "language": languageFrom
         };
         Speech.speak(enteredText, options);
     }, [enteredText]);
@@ -130,9 +134,12 @@ export default function HomeScreen(props) {
                 <Text style={styles.languageOptionText}>{supportedLanguages[languageFrom]}</Text>
             </TouchableOpacity>
 
-            <View style={styles.arrowContainer}>
+
+            <TouchableOpacity
+                style={styles.arrowContainer}>
                 <AntDesign name="arrowright" size={24} color={colors.lightGrey} />
-            </View>
+            </TouchableOpacity>
+
 
             <TouchableOpacity
                 style={styles.languageOption}

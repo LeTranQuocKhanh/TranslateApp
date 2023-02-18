@@ -10,15 +10,7 @@ import { Ionicons,  AntDesign , MaterialIcons } from '@expo/vector-icons';
 import colors from '../utils/colors';
 import * as Clipboard from 'expo-clipboard';
 
-// import TranslationResult from '../components/TranslationResult';
 
-
-// var options =  { 
-//   apikey: '5c12daff7588957',
-//   language: 'eng', // Português
-//   imageFormat: 'image/png', // Image Type (Only png ou gif is acceptable at the moment i wrote this)
-//   isOverlayRequired: true
-// };
 
 export default function CameraScreen() {
   let cameraRef = useRef();
@@ -105,12 +97,11 @@ export default function CameraScreen() {
 
     const convertToText = async () => {
       var myHeaders = new Headers();
-      myHeaders.append("apikey", "5c12daff7588957");
+      myHeaders.append("apikey", "helloworld");
       
       var formdata = new FormData();
       formdata.append("language", "eng");
       formdata.append("isOverlayRequired", "false");
-      // formdata.append("url", "http://dl.a9t9.com/ocrbenchmark/eng.png");
       formdata.append("base64Image", 'data:image/jpeg;base64,' + photo.base64);
       formdata.append("iscreatesearchablepdf", "false");
       formdata.append("issearchablepdfhidetextlayer", "false");
@@ -126,7 +117,9 @@ export default function CameraScreen() {
         .then(response => response.json())
         .then(result => {
           setPhoto(undefined)
+          // console.log(typeof(result))
           setText(result.ParsedResults[0].ParsedText)
+          console.log(result.ParsedResults[0].ParsedText)
         })
         .catch(error => console.log('error', error));
     }
@@ -264,6 +257,5 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     backgroundColor: colors.primary,
-    margin: '5px'
   }
 });
